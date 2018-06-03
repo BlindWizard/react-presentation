@@ -3,7 +3,7 @@ import {STATUS_OK, STATUS_ERROR} from "../result";
 export class Widget {
     constructor(element) {
         this.element = element;
-        this.render(true, 'Действие выполнено успешно');
+        this.render(true, '');
     }
 
     sendRequest() {
@@ -17,6 +17,7 @@ export class Widget {
 
     render(success, message) {
         this.element.innerHTML = '';
+
         let button = document.createElement('button');
         button.classList.add('btn');
         button.innerText = 'Действие';

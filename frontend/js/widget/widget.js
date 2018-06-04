@@ -1,5 +1,6 @@
 import {STATUS_OK, STATUS_ERROR} from "../result";
 import {HttpService} from "./ajax";
+import {Popover} from "./popover";
 
 export class Widget {
     constructor(element, props) {
@@ -59,20 +60,12 @@ export class Widget {
         }
         button.onclick = () => {this.sendRequest()};
 
-        let popover = document.createElement('div');
-        popover.classList.add = 'message';
-
-        if (true === this.state.success) {
-            popover.classList.add = 'success';
-        }
-        else {
-            popover.classList.remove = 'error';
-        }
-
-        popover.innerText     = this.state.message;
-        popover.style.display = 'block';
-
         this.element.append(button);
-        this.element.append(popover);
+
+        let popover = new Popover(this.element, {
+            success: this.state.success,
+            message: this.state.message
+        });
+        popover.render();
     }
 }

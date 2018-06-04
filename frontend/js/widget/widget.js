@@ -2,9 +2,10 @@ import {STATUS_OK, STATUS_ERROR} from "../result";
 import {HttpService} from "./ajax";
 
 export class Widget {
-    constructor(element) {
+    constructor(element, props) {
         this.element = element;
         this.state   = {};
+        this.props   = Object.assign({}, props);
 
         this.setState({
             success: true,
@@ -15,7 +16,7 @@ export class Widget {
     }
 
     sendRequest() {
-        let response = HttpService.sendRequest();
+        let response = HttpService.sendRequest(this.props.successful);
         if (STATUS_OK === response.status) {
             this.setState({
                 success: true,
@@ -34,6 +35,8 @@ export class Widget {
                 message: 'Произошла непредвиденная ошибка',
             });
         }
+
+        this.props.callback();
     }
 
     setState(state) {
@@ -46,8 +49,15 @@ export class Widget {
 
         let button = document.createElement('button');
         button.classList.add('btn');
-        button.innerText = 'Действие';
-        button.onclick   = () => {this.sendRequest()};
+        if (true === this.props.successful) {
+            button.classList.add('btn-success');
+            button.innerText = 'Успешное действие';
+        }
+        else {
+            button.classList.add('btn-danger');
+            button.innerText = 'Неуспешное действие';
+        }
+        button.onclick = () => {this.sendRequest()};
 
         let popover = document.createElement('div');
         popover.classList.add = 'message';

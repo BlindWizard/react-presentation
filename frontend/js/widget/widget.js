@@ -4,7 +4,12 @@ import {HttpService} from "./ajax";
 export class Widget {
     constructor(element) {
         this.element = element;
-        this.render(true, '');
+        this.state   = {};
+
+        this.setState({
+            success: true,
+            message: '',
+        });
 
         this.sendRequest.bind(this);
     }
@@ -12,17 +17,31 @@ export class Widget {
     sendRequest() {
         let response = HttpService.sendRequest();
         if (STATUS_OK === response.status) {
-            this.render(true, 'Действие выполнено успешно');
+            this.setState({
+                success: true,
+                message: 'Действие выполнено успешно',
+            });
         }
         else if (STATUS_ERROR === response.status) {
-            this.render(false, response.message);
+            this.setState({
+                success: false,
+                message: response.message,
+            });
         }
         else {
-            this.render(false, 'Произошла непредвиденная ошибка')
+            this.setState({
+                success: false,
+                message: 'Произошла непредвиденная ошибка',
+            });
         }
     }
 
-    render(success, message) {
+    setState(state) {
+        Object.assign(this.state, state);
+        this.render();
+    }
+
+    render() {
         this.element.innerHTML = '';
 
         let button = document.createElement('button');
@@ -33,14 +52,14 @@ export class Widget {
         let popover = document.createElement('div');
         popover.classList.add = 'message';
 
-        if (true === success) {
+        if (true === this.state.success) {
             popover.classList.add = 'success';
         }
         else {
             popover.classList.remove = 'error';
         }
 
-        popover.innerText     = message;
+        popover.innerText     = this.state.message;
         popover.style.display = 'block';
 
         this.element.append(button);

@@ -10,20 +10,21 @@ export class Widget {
         let button = this.element.querySelector(SELECTOR_BUTTON);
         button.onclick = () => {
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', this.element.dataset.url, false);
+            xhr.open('GET', this.element.dataset.url + '?requiredResult=' + this.element.dataset.result, false);
+            xhr.onreadystatechange = () => {
+                let response = JSON.parse(xhr.responseText);
+                if (STATUS_OK === response.status) {
+                    this.openPopover(true, 'Действие выполнено успешно');
+                }
+                else if (STATUS_ERROR === response.status) {
+                    this.openPopover(false, response.message);
+                }
+                else {
+                    this.openPopover(false, 'Произошла непредвиденная ошибка')
+                }
+            };
+
             xhr.send();
-
-            let response = JSON.parse(xhr.responseText);
-
-            if (STATUS_OK === response.status) {
-                this.openPopover(true, 'Действие выполнено успешно');
-            }
-            else if (STATUS_ERROR === response.status) {
-                this.openPopover(false, response.message);
-            }
-            else {
-                this.openPopover(false, 'Произошла непредвиденная ошибка')
-            }
         };
     }
 

@@ -3,7 +3,8 @@
 ?>
 
 <div data-role="widget"
-     data-url="<?= Url::to(['api/api', 'requiredResult' => true]) ?>"
+     data-url="<?= Url::to(['api/api']) ?>"
+     data-result="true"
 >
     <button type="button"
             data-role="button"
@@ -17,7 +18,8 @@
 <br>
 
 <div data-role="widget"
-     data-url="<?= Url::to(['api/api', 'requiredResult' => false]) ?>"
+     data-url="<?= Url::to(['api/api']) ?>"
+     data-result="false"
 >
     <button type="button"
             data-role="button"

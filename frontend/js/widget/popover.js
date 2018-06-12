@@ -7,17 +7,22 @@ export class Popover {
 
     render() {
         let popover = document.createElement('div');
-        popover.classList.add = 'message';
+        popover.classList.add('message');
 
         if (true === this.props.success) {
-            popover.classList.add = 'success';
+            popover.classList.add('success');
         }
         else {
-            popover.classList.remove = 'error';
+            popover.classList.add('error');
         }
 
-        popover.innerText     = this.props.message;
-        popover.style.display = 'block';
+        if (null !== this.props.message) {
+            popover.style.display = 'block';
+            popover.innerText     = this.props.message;
+        }
+        else {
+            popover.style.display = 'none';
+        }
 
         this.element.append(popover);
     }

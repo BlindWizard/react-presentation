@@ -86,6 +86,18 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./frontend/js/config.js":
+/*!*******************************!*\
+  !*** ./frontend/js/config.js ***!
+  \*******************************/
+/*! exports provided: API_URL */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"API_URL\", function() { return API_URL; });\nconst API_URL = '/api/api';\n\n//# sourceURL=webpack:///./frontend/js/config.js?");
+
+/***/ }),
+
 /***/ "./frontend/js/index.js":
 /*!******************************!*\
   !*** ./frontend/js/index.js ***!
@@ -118,7 +130,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"HttpService\", function() { return HttpService; });\nclass HttpService {\n    static sendRequest() {\n        let xhr = new XMLHttpRequest();\n\n        xhr.open('GET', '/react/api?requiredResult=true', false);\n        xhr.send();\n\n        return JSON.parse(xhr.responseText);\n    }\n}\n\n//# sourceURL=webpack:///./frontend/js/widget/ajax.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"HttpService\", function() { return HttpService; });\n/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ \"./frontend/js/config.js\");\n\n\nclass HttpService {\n    static sendRequest() {\n        return new Promise((resolve, reject) => {\n            let xhr = new XMLHttpRequest();\n            xhr.open('GET', _config__WEBPACK_IMPORTED_MODULE_0__[\"API_URL\"] + '?requiredResult=true', false);\n            xhr.onreadystatechange = () => {\n                resolve(JSON.parse(xhr.responseText));\n            };\n\n            xhr.send();\n        });\n    }\n}\n\n//# sourceURL=webpack:///./frontend/js/widget/ajax.js?");
 
 /***/ }),
 
@@ -130,7 +142,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Widget\", function() { return Widget; });\n/* harmony import */ var _result__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../result */ \"./frontend/js/result.js\");\n/* harmony import */ var _ajax__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ajax */ \"./frontend/js/widget/ajax.js\");\n\n\n\nclass Widget {\n    constructor(element) {\n        this.element = element;\n        this.state   = {};\n\n        this.setState({\n            success: true,\n            message: '',\n        });\n\n        this.sendRequest.bind(this);\n    }\n\n    sendRequest() {\n        let response = _ajax__WEBPACK_IMPORTED_MODULE_1__[\"HttpService\"].sendRequest();\n        if (_result__WEBPACK_IMPORTED_MODULE_0__[\"STATUS_OK\"] === response.status) {\n            this.setState({\n                success: true,\n                message: 'Действие выполнено успешно',\n            });\n        }\n        else if (_result__WEBPACK_IMPORTED_MODULE_0__[\"STATUS_ERROR\"] === response.status) {\n            this.setState({\n                success: false,\n                message: response.message,\n            });\n        }\n        else {\n            this.setState({\n                success: false,\n                message: 'Произошла непредвиденная ошибка',\n            });\n        }\n    }\n\n    setState(state) {\n        Object.assign(this.state, state);\n        this.render();\n    }\n\n    render() {\n        this.element.innerHTML = '';\n\n        let button = document.createElement('button');\n        button.classList.add('btn');\n        button.innerText = 'Действие';\n        button.onclick   = () => {this.sendRequest()};\n\n        let popover = document.createElement('div');\n        popover.classList.add = 'message';\n\n        if (true === this.state.success) {\n            popover.classList.add = 'success';\n        }\n        else {\n            popover.classList.remove = 'error';\n        }\n\n        popover.innerText     = this.state.message;\n        popover.style.display = 'block';\n\n        this.element.append(button);\n        this.element.append(popover);\n    }\n}\n\n//# sourceURL=webpack:///./frontend/js/widget/widget.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Widget\", function() { return Widget; });\n/* harmony import */ var _result__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../result */ \"./frontend/js/result.js\");\n/* harmony import */ var _ajax__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ajax */ \"./frontend/js/widget/ajax.js\");\n\n\n\nclass Widget {\n    constructor(element) {\n        this.element = element;\n        this.state   = {};\n\n        this.setState({\n            success: true,\n            message: '',\n        });\n\n        this.sendRequest = this.sendRequest.bind(this);\n        this.render(true, null);\n    }\n\n    setState(state) {\n        Object.assign(this.state, state);\n        this.render();\n    }\n\n    render() {\n        this.element.innerHTML = '';\n\n        let button       = document.createElement('button');\n        button.innerText = 'Действие';\n        button.onclick   = this.sendRequest;\n        button.classList.add('btn');\n\n        let popover           = document.createElement('div');\n        popover.innerText     = this.state.message;\n        popover.style.display = (null !== this.state.message ? 'block' : 'none');\n        if (true === this.state.success) {\n            popover.classList.add('message', 'success');\n        }\n        else {\n            popover.classList.add('message', 'error');\n        }\n\n        this.element.append(button);\n        this.element.append(popover);\n    }\n\n    sendRequest() {\n        let response = _ajax__WEBPACK_IMPORTED_MODULE_1__[\"HttpService\"].sendRequest();\n        response.then(() => {\n            if (_result__WEBPACK_IMPORTED_MODULE_0__[\"STATUS_OK\"] === response.status) {\n                this.setState({\n                    success: true,\n                    message: 'Действие выполнено успешно',\n                });\n            }\n            else if (_result__WEBPACK_IMPORTED_MODULE_0__[\"STATUS_ERROR\"] === response.status) {\n                this.setState({\n                    success: false,\n                    message: response.message,\n                });\n            }\n            else {\n                this.setState({\n                    success: false,\n                    message: 'Произошла непредвиденная ошибка',\n                });\n            }\n        });\n    }\n}\n\n\n//# sourceURL=webpack:///./frontend/js/widget/widget.js?");
 
 /***/ })
 

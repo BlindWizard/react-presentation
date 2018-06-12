@@ -4,8 +4,8 @@ import {HttpService} from "./ajax";
 export class Widget {
     constructor(element) {
         this.element = element;
-        this.render(true, '');
 
+        this.render(true, null);
         this.sendRequest.bind(this);
     }
 
@@ -25,23 +25,21 @@ export class Widget {
     render(success, message) {
         this.element.innerHTML = '';
 
-        let button = document.createElement('button');
-        button.classList.add('btn');
+        let button  = document.createElement('button');
         button.innerText = 'Действие';
-        button.onclick   = () => {this.sendRequest()};
+        button.onclick   = this.sendRequest;
+        button.classList.add('btn');
 
-        let popover = document.createElement('div');
-        popover.classList.add = 'message';
 
+        let popover           = document.createElement('div');
+        popover.innerText     = message;
+        popover.style.display = (null !== message ? 'block' : 'none');
         if (true === success) {
-            popover.classList.add = 'success';
+            popover.classList.add('message', 'success');
         }
         else {
-            popover.classList.remove = 'error';
+            popover.classList.add('message', 'error');
         }
-
-        popover.innerText     = message;
-        popover.style.display = 'block';
 
         this.element.append(button);
         this.element.append(popover);

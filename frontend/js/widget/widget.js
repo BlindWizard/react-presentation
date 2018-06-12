@@ -11,7 +11,7 @@ export class Widget {
     sendRequest() {
         let xhr = new XMLHttpRequest();
 
-        xhr.open('GET', this.element.dataset.url, false);
+        xhr.open('GET', this.element.dataset.url + '?requiredResult=' + this.element.dataset.result, false);
         xhr.onreadystatechange = () => {
             let response = JSON.parse(xhr.responseText);
             if (STATUS_OK === response.status) {
@@ -35,7 +35,6 @@ export class Widget {
         button.innerText = 'Действие';
         button.onclick   = this.sendRequest;
         button.classList.add('btn');
-
 
         let popover           = document.createElement('div');
         popover.innerText     = message;

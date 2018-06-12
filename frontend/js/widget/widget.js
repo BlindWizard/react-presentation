@@ -30,7 +30,6 @@ export class Widget {
         button.onclick   = this.sendRequest;
         button.classList.add('btn');
 
-
         let popover           = document.createElement('div');
         popover.innerText     = message;
         popover.style.display = (null !== message ? 'block' : 'none');

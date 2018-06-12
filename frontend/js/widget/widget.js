@@ -3,40 +3,16 @@ import {HttpService} from "./ajax";
 
 export class Widget {
     constructor(element, props) {
-        this.element = element;
+        this.element     = element;
+        this.sendRequest = this.sendRequest.bind(this);
+
         this.state   = {};
         this.props   = Object.assign({}, props);
 
         this.setState({
             success: true,
-            message: '',
+            message: null,
         });
-
-        this.sendRequest.bind(this);
-    }
-
-    sendRequest() {
-        let response = HttpService.sendRequest(this.props.successful);
-        if (STATUS_OK === response.status) {
-            this.setState({
-                success: true,
-                message: 'Действие выполнено успешно',
-            });
-        }
-        else if (STATUS_ERROR === response.status) {
-            this.setState({
-                success: false,
-                message: response.message,
-            });
-        }
-        else {
-            this.setState({
-                success: false,
-                message: 'Произошла непредвиденная ошибка',
-            });
-        }
-
-        this.props.callback();
     }
 
     setState(state) {
@@ -57,22 +33,43 @@ export class Widget {
             button.classList.add('btn-danger');
             button.innerText = 'Неуспешное действие';
         }
-        button.onclick = () => {this.sendRequest()};
+        button.onclick = this.sendRequest;
 
-        let popover = document.createElement('div');
-        popover.classList.add = 'message';
-
+        let popover           = document.createElement('div');
+        popover.innerText     = this.state.message;
+        popover.style.display = (null !== this.state.message ? 'block' : 'none');
         if (true === this.state.success) {
-            popover.classList.add = 'success';
+            popover.classList.add('message', 'success');
         }
         else {
-            popover.classList.remove = 'error';
+            popover.classList.add('message', 'error');
         }
-
-        popover.innerText     = this.state.message;
-        popover.style.display = 'block';
 
         this.element.append(button);
         this.element.append(popover);
+    }
+
+    sendRequest() {
+        let response = HttpService.sendRequest(this.props.successful);
+        response.then((result) => {
+            if (STATUS_OK === result.status) {
+                this.setState({
+                    success: true,
+                    message: 'Действие выполнено успешно',
+                });
+            }
+            else if (STATUS_ERROR === result.status) {
+                this.setState({
+                    success: false,
+                    message: result.message,
+                });
+            }
+            else {
+                this.setState({
+                    success: false,
+                    message: 'Произошла непредвиденная ошибка',
+                });
+            }
+        });
     }
 }

@@ -5,21 +5,23 @@ export class Widget {
     constructor(element) {
         this.element = element;
 
+        this.sendRequest = this.sendRequest.bind(this);
         this.render(true, null);
-        this.sendRequest.bind(this);
     }
 
     sendRequest() {
         let response = HttpService.sendRequest();
-        if (STATUS_OK === response.status) {
-            this.render(true, 'Действие выполнено успешно');
-        }
-        else if (STATUS_ERROR === response.status) {
-            this.render(false, response.message);
-        }
-        else {
-            this.render(false, 'Произошла непредвиденная ошибка')
-        }
+        response.then(() => {
+            if (STATUS_OK === response.status) {
+                this.render(true, 'Действие выполнено успешно');
+            }
+            else if (STATUS_ERROR === response.status) {
+                this.render(false, response.message);
+            }
+            else {
+                this.render(false, 'Произошла непредвиденная ошибка')
+            }
+        });
     }
 
     render(success, message) {

@@ -4,14 +4,30 @@ namespace app\controllers;
 
 use app\models\ApiResponse;
 use app\models\ResponseStatus;
+use Yii;
 use yii\web\Controller;
+use yii\web\Response;
 
-class ReactController extends Controller {
+/**
+ * Контроллер апи.
+ */
+class ApiController extends Controller {
+    /**
+     * Главная страница приложения.
+     */
     public function actionIndex() {
         return $this->render('index');
     }
 
+    /**
+     * Энд-пойнт приложения.
+     *
+     * @param bool $requiredResult
+     *
+     * @return ApiResponse
+     */
     public function actionApi(bool $requiredResult) {
+        Yii::$app->response->format = Response::FORMAT_JSON;
         $response = new ApiResponse();
 
         if (true === $requiredResult) {
@@ -22,6 +38,6 @@ class ReactController extends Controller {
             $response->message = 'Операция не может быть выполнена';
         }
 
-        return json_encode($response);
+        return $response;
     }
 }

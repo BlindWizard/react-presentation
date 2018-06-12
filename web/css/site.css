@@ -114,7 +114,6 @@ a.desc:after {
     outline: none;
 }
 .message {
-    display:       none;
     position:      relative;
     top:           10px;
     border:        1px solid rgba(0, 0, 0, .2);

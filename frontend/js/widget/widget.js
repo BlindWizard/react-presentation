@@ -3,27 +3,17 @@ import {STATUS_OK, STATUS_ERROR} from "../result";
 export class Widget {
     constructor(element) {
         this.element = element;
-        this.render(true, '');
+
+        this.sendRequest = this.sendRequest.bind(this);
+        this.render(true, null);
     }
 
     sendRequest() {
         let xhr = new XMLHttpRequest();
 
         xhr.open('GET', this.element.dataset.url, false);
-        xhr.send();
-
-        return JSON.parse(xhr.responseText);
-    }
-
-    render(success, message) {
-        this.element.innerHTML = '';
-
-        let button = document.createElement('button');
-        button.classList.add('btn');
-        button.innerText = 'Действие';
-
-        button.onclick = () => {
-            let response = this.sendRequest();
+        xhr.onreadystatechange = () => {
+            let response = JSON.parse(xhr.responseText);
             if (STATUS_OK === response.status) {
                 this.render(true, 'Действие выполнено успешно');
             }
@@ -35,18 +25,27 @@ export class Widget {
             }
         };
 
-        let popover = document.createElement('div');
-        popover.classList.add = 'message';
+        xhr.send();
+    }
 
+    render(success, message) {
+        this.element.innerHTML = '';
+
+        let button  = document.createElement('button');
+        button.innerText = 'Действие';
+        button.onclick   = this.sendRequest;
+        button.classList.add('btn');
+
+
+        let popover           = document.createElement('div');
+        popover.innerText     = message;
+        popover.style.display = (null !== message ? 'block' : 'none');
         if (true === success) {
-            popover.classList.add = 'success';
+            popover.classList.add('message', 'success');
         }
         else {
-            popover.classList.remove = 'error';
+            popover.classList.add('message', 'error');
         }
-
-        popover.innerText     = message;
-        popover.style.display = 'block';
 
         this.element.append(button);
         this.element.append(popover);

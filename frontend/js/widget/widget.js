@@ -8,7 +8,7 @@ export class Widget {
 
         this.setState({
             success: true,
-            message: '',
+            message: null,
         });
 
         this.sendRequest = this.sendRequest.bind(this);
@@ -44,17 +44,17 @@ export class Widget {
 
     sendRequest() {
         let response = HttpService.sendRequest();
-        response.then(() => {
-            if (STATUS_OK === response.status) {
+        response.then((result) => {
+            if (STATUS_OK === result.status) {
                 this.setState({
                     success: true,
                     message: 'Действие выполнено успешно',
                 });
             }
-            else if (STATUS_ERROR === response.status) {
+            else if (STATUS_ERROR === result.status) {
                 this.setState({
                     success: false,
-                    message: response.message,
+                    message: result.message,
                 });
             }
             else {

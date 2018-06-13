@@ -3,16 +3,14 @@ import {HttpService} from "./ajax";
 
 export class Widget {
     constructor(element) {
-        this.element = element;
-        this.state   = {};
+        this.element     = element;
+        this.sendRequest = this.sendRequest.bind(this);
 
+        this.state = {};
         this.setState({
             success: true,
             message: null,
         });
-
-        this.sendRequest = this.sendRequest.bind(this);
-        this.render(true, null);
     }
 
     setState(state) {

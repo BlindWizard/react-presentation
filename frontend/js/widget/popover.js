@@ -6,10 +6,12 @@ export class Popover extends React.Component {
             return null;
         }
 
-        return (
-            <div className={'message ' + (true === this.props.success ? 'success' : 'error')}>
-                {this.props.message}
-            </div>
+        return React.createElement(
+            'div',
+            {
+                className: 'message ' + (true === this.props.success ? 'success' : 'error')
+            },
+            this.props.message
         );
     }
 }

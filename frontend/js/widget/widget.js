@@ -43,15 +43,24 @@ export class Widget extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                <button className={'btn ' + (true === this.props.successful ? 'btn-success' : 'btn-danger')}
-                        onClick={this.sendRequest}
-                >
-                    {true === this.props.successful ? 'Успешное действие' : 'Неуспешное действие'}
-                </button>
-                <Popover success={this.props.successful} message={this.state.message}/>
-            </div>
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'button',
+                {
+                    className: 'btn ' + (true === this.props.successful ? 'btn-success' : 'btn-danger'),
+                    onClick: this.sendRequest
+                },
+                true === this.props.successful ? 'Успешное действие' : 'Неуспешное действие'
+            ),
+            React.createElement(
+                Popover,
+                {
+                    success: this.props.successful,
+                    message: this.state.message
+                }
+            )
         );
     }
 }
